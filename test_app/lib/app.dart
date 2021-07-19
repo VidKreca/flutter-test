@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:test_app/utils/services/rest.dart';
 import 'dart:math';
 
-import 'random_number.dart';
-import 'timer.dart';
-import 'notes.dart';
+import 'tabs/random_number.dart';
+import 'tabs/timer.dart';
+import 'tabs/notes.dart';
+import 'tabs/github_search.dart';
 
 class App extends StatefulWidget {
   App({Key? key}) : super(key: key);
@@ -15,30 +17,31 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   static const String _title = "My App";
 
-  int _number = -1;
-  int _max = 100;
-
-  _AppState() {
-    this._number = _randomNumber();
-  }
-
-  int _randomNumber() {
-    return Random().nextInt(_max > 0 ? _max : 1);
-  }
-
   @override
   Widget build(BuildContext context) {
-    const int _sliderMax = 10000;
-
     return DefaultTabController(
         initialIndex: 0,
         length: 3,
         child: Scaffold(
             appBar: AppBar(
                 title: Text(_title),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      // Open GithubSearch page
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GithubSearch()));
+                    },
+                    icon: Icon(Icons.search),
+                  ),
+                ],
                 bottom: TabBar(
                   tabs: [
-                    Tab(icon: Icon(Icons.confirmation_number)),
+                    Tab(
+                      icon: Icon(Icons.confirmation_number),
+                    ),
                     Tab(
                       icon: Icon(Icons.timer),
                     ),

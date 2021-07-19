@@ -1,0 +1,63 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+import 'package:http/http.dart' as http;
+
+class SearchResult {
+  final int total_count;
+  final bool incomplete_results;
+  final List<Repository> items;
+
+  SearchResult(
+      {required this.total_count,
+      required this.incomplete_results,
+      required this.items});
+
+  factory SearchResult.fromJson(Map<String, dynamic> json) {
+    final List<Repository> items = (json["items"] as List)
+        .map((item) => Repository.fromJson(item))
+        .toList();
+
+    return SearchResult(
+        total_count: json["total_count"],
+        incomplete_results: json["incomplete_results"],
+        items: items);
+  }
+}
+
+class Repository {
+  final String name;
+  final String full_name;
+  final String html_url;
+  final String? description;
+
+  Repository(
+      {required this.name,
+      required this.full_name,
+      required this.html_url,
+      required this.description});
+
+  factory Repository.fromJson(Map<String, dynamic> json) {
+    return Repository(
+        name: json["name"],
+        full_name: json["full_name"],
+        html_url: json["html_url"],
+        description: json["description"]);
+  }
+}
+
+Future<SearchResult> search(String query) async {
+  String baseUrl = "api.github.com";
+  String endpoint = "/search/repositories";
+
+  final uri = Uri.https(baseUrl, endpoint, {"q": Uri.encodeComponent(query)});
+  log(uri.toString());
+
+  final response = await http.get(uri);
+
+  if (response.statusCode == 200) {
+    return SearchResult.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception("Failed to fetch search results");
+  }
+}
