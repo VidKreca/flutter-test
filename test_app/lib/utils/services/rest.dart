@@ -23,26 +23,36 @@ class SearchResult {
         incomplete_results: json["incomplete_results"],
         items: items);
   }
+
+  factory SearchResult.empty() {
+    return SearchResult(
+        total_count: 0, incomplete_results: false, items: <Repository>[]);
+  }
 }
 
 class Repository {
   final String name;
   final String full_name;
   final String html_url;
-  final String? description;
+  final String description;
+  final String avatar_url;
 
   Repository(
       {required this.name,
       required this.full_name,
       required this.html_url,
-      required this.description});
+      required this.description,
+      required this.avatar_url});
 
   factory Repository.fromJson(Map<String, dynamic> json) {
     return Repository(
         name: json["name"],
         full_name: json["full_name"],
         html_url: json["html_url"],
-        description: json["description"]);
+        description: json["description"] == null ? "" : json["description"],
+        avatar_url: json["owner"]["avatar_url"] == null
+            ? ""
+            : json["owner"]["avatar_url"]);
   }
 }
 
@@ -58,6 +68,6 @@ Future<SearchResult> search(String query) async {
   if (response.statusCode == 200) {
     return SearchResult.fromJson(jsonDecode(response.body));
   } else {
-    throw Exception("Failed to fetch search results");
+    return SearchResult.empty();
   }
 }

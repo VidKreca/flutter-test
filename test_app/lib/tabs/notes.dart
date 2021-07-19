@@ -131,7 +131,7 @@ class _NotesWidgetState extends State<NotesWidget>
                 );
               },
             ),
-          )
+          ),
         ],
       ),
     );

@@ -1,10 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.test_app">
+
+  <uses-permission android:name="android.permission.INTERNET" />
+
    <application
         android:label="test_app"
         android:icon="@mipmap/ic_launcher">
-
-        <uses-permission android:name="android.permission.INTERNET" />
 
         <activity
             android:name=".MainActivity"
